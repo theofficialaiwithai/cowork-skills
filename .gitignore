@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Output files (generated at runtime, not tracked)
+outputs/
+*.docx
+*.xlsx
+*.pdf
+spec_data.json

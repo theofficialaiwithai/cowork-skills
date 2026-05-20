@@ -1,0 +1,191 @@
+# Phase Output Templates
+
+These are the exact locked output formats for each phase. Use them verbatim — consistency
+matters so the user can track progress and reference previous decisions easily.
+
+---
+
+## Phase 1 Output — Idea Clarification
+
+```
+PHASE 1 OUTPUT — LOCKED
+─────────────────────────────────────────
+System: [short name] — [one-line description]
+Target user: [who uses it and how]
+Core outcome: [what is measurably different after this exists]
+Problem solved: [the specific pain or friction being eliminated]
+Success criteria: [how you'll know it's working — specific and observable]
+─────────────────────────────────────────
+Ready to move to Phase 2: System Design ▶
+```
+
+**Notes on filling it in:**
+- "System" should be nameable — e.g., "Email Reply Agent" not just "email thing"
+- "Success criteria" should be concrete — "saves 2 hours/week" not "faster"
+- If the user gave vague answers, synthesize and confirm before locking
+
+---
+
+## Phase 2 Output — System Design
+
+```
+PHASE 2 OUTPUT — LOCKED
+─────────────────────────────────────────
+ARCHITECTURE OVERVIEW
+
+TRIGGER → [what starts the system: event / schedule / user action]
+INPUT   → [data source: email / form / file / API / webhook]
+         ↓
+[Component 1] — [role: what it does, decides, or transforms]
+         ↓
+[Component 2] — [role]
+         ↓
+[Component N] — [role]
+         ↓
+OUTPUT  → [destination: message / document / database / API call]
+
+Agent roles: [list each agent + responsibility, OR "None — linear workflow"]
+Data flow: [one sentence: what data moves through the system and how it transforms]
+─────────────────────────────────────────
+Ready to move to Phase 3: Tool Selection ▶
+```
+
+**Notes:**
+- Keep component names action-oriented: "Email Parser", "Intent Classifier", "Reply Drafter"
+- If there are branches (if/else logic), show them with indentation:
+  ```
+  [Decision Point]
+    ├── IF [condition] → [path A]
+    └── IF NOT → [path B]
+  ```
+
+---
+
+## Phase 3 Output — Tool Selection
+
+```
+PHASE 3 OUTPUT — LOCKED
+─────────────────────────────────────────
+Selected tool: [Tool Name]
+Justification:
+  [2–3 sentences explaining why this tool fits: complexity, integrations, AI needs, cost]
+
+Rejected alternatives:
+  - [Tool A]: [one sentence — why it was ruled out]
+  - [Tool B]: [one sentence — why it was ruled out]
+
+Key documentation:
+  [Tool Name] docs: [URL from tool-selection-matrix.md]
+
+Setup starting point:
+  [One sentence: where to go first to start building]
+─────────────────────────────────────────
+Ready to move to Phase 4: Workflow Mapping ▶
+```
+
+---
+
+## Phase 4 Output — Workflow Map
+
+```
+PHASE 4 OUTPUT — LOCKED
+─────────────────────────────────────────
+WORKFLOW MAP — [System Name]
+
+Step 1: [Trigger] → [Action: what happens] → [Output: what is produced]
+Step 2: [Input from Step 1] → [Action] → [Output]
+Step 3: [Input from Step 2] → [Action] → [Output]
+[... continue for all steps]
+
+Decision logic:
+  [If applicable: IF [condition] → [route], ELSE → [route]]
+
+Error handling:
+  [What happens if Step N fails — retry, notify, skip, or halt?]
+
+Agent roles: [list each agent's responsibility, or "N/A — linear workflow"]
+
+Estimated execution time per run: [X seconds / X minutes / async]
+─────────────────────────────────────────
+Ready to move to Phase 5: Implementation ▶
+```
+
+---
+
+## Phase 5 Step Format (per micro-step)
+
+```
+─────────────────────────────────────────
+STEP [N] of [total]
+─────────────────────────────────────────
+What to do:
+  [Single, clear action — one sentence]
+
+Where:
+  [Tool name → specific screen, menu, or section]
+
+What you'll see when done:
+  [Expected result — green check, new row, confirmation message, etc.]
+─────────────────────────────────────────
+Say "done" or "next" to continue ▶
+```
+
+**Checkpoint format (every 3–5 steps):**
+
+```
+─────────────────────────────────────────
+✅ CHECKPOINT — Steps [X–Y] Complete
+─────────────────────────────────────────
+What's been built: [brief summary]
+What's next: [preview of next 3 steps]
+─────────────────────────────────────────
+Ready to continue? Say "yes" ▶
+```
+
+---
+
+## Phase 6 Output — Optimization & Final Spec
+
+```
+PHASE 6 OUTPUT — LOCKED
+─────────────────────────────────────────
+OPTIMIZATION ANALYSIS
+
+Bottleneck: [Step N — why it's the weakest link]
+Quick fix: [what to change right now]
+
+Cost opportunity: [how to reduce cost if applicable]
+Reliability risk: [what breaks at 10× volume]
+
+AI expansion opportunity:
+  [Which manual or rule-based step could become AI-driven, and how]
+
+Multi-agent potential:
+  [Should this become multiple specialized agents? What would they be?]
+
+Recommended next scaling step:
+  [Single most impactful thing to do after launch]
+─────────────────────────────────────────
+📄 Strategic AI OS Spec → generating document...
+```
+
+After this, generate the full spec document using `scripts/generate_spec.py`.
+
+---
+
+## Final Spec Document Structure
+
+The `.docx` generated by `generate_spec.py` contains two sections:
+
+### Section 1: Strategic AI Operating System Spec
+- Architecture overview (from Phase 2 diagram)
+- Agent roles and responsibilities
+- Workflow logic summary (from Phase 4 map)
+- Tool rationale (from Phase 3)
+- Scaling strategy (from Phase 6)
+
+### Section 2: Implementation Blueprint
+- Step-by-step build instructions (from Phase 5)
+- Tool setup guide (from tool-selection-matrix.md)
+- Integration mapping
+- Execution checklist (all Phase 4 steps as checkboxes)
