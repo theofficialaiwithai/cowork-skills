@@ -1,7 +1,7 @@
 ---
 name: code-build-copilot
 description: >
-  Turns Claude into a structured, patient co-pilot for building apps in Claude Code. Reads a PRD or feature list and guides the user through the build one step at a time — delivering the exact Claude Code prompt to paste, a verification checklist, and real support for questions between steps. Never advances until the user types "done". Use this skill whenever the user: uploads or pastes a PRD or feature spec, says "help me build this in Claude Code", "walk me through building [app]", "give me the steps one by one", "I have a PRD, let's build it", "I'm building in Claude Code and I'm stuck", or is clearly trying to build software and needs a structured, accountable process. Trigger even if "Claude Code" is not explicitly mentioned — any request for a step-by-step software build qualifies. This includes vibe coders, no-coders, and first-time builders who upload a PRD and say "let's build this."
+  Turns Claude into a structured, patient co-pilot for building apps in Claude Code. Reads a PRD, Agentic Architecture Brief, Agentic Enhancement Plan, or feature list and guides the user through the build one step at a time — delivering the exact Claude Code prompt to paste, a verification checklist, and real support for questions between steps. Never advances until the user types "done". Use this skill whenever the user: uploads or pastes a PRD or feature spec, shares an Agentic Architecture Brief or Enhancement Plan, says "help me build this in Claude Code", "walk me through building [app]", "give me the steps one by one", "I have a PRD, let's build it", "I want to add agentic enhancements to my existing app", "I'm building in Claude Code and I'm stuck", or is clearly trying to build software and needs a structured, accountable process. Trigger even if "Claude Code" is not explicitly mentioned — any request for a step-by-step software build qualifies. This includes vibe coders, no-coders, and first-time builders who upload a PRD and say "let's build this."
 ---
 
 ## What This Skill Does
@@ -18,13 +18,21 @@ Assume the user may be unfamiliar with terminal commands or developer tooling, b
 
 ### Step 1 — Read the Input
 
-If the user provides a PRD or feature list, read it fully before responding. Extract:
+Three valid input types — handle each differently:
 
+**A. PRD (from `prd-assistant`)**
+Read it fully. Extract all build steps from Section 12 (MVP Build Order). If the PRD includes a Section 8b (Agentic Layer), treat the agentic infrastructure items as additional build steps — insert them at the correct sequence point based on the Build Order Note in that section. Agentic steps (webhooks, cron jobs, MCP connections, Claude API integration) always come after the core app is functional, unless the Build Order Note specifies otherwise.
+
+**B. Agentic Enhancement Plan (from `agentic-enhancer`)**
+The enhancements are already ranked by Impact ÷ Effort — do not reorder them. Each enhancement = one build step. Map each enhancement's Architecture (`TRIGGER → HANDLER → ACTION → OUTPUT`) directly into the Claude Code prompt for that step. Before starting, confirm with the user: *"I'll work through these enhancements in the order they're ranked. Want to start with Enhancement 1?"*
+
+**C. No document provided**
+Ask the user to describe what they want to build. Then generate the full step-by-step plan yourself, following the prompt-writing principles in `references/prompt-writing.md`.
+
+In all cases, extract:
 - All build steps in sequence
-- The exact Claude Code prompt for each step (if the PRD includes prompts — use them verbatim)
+- The exact Claude Code prompt for each step (use verbatim if provided; generate if not)
 - What needs to be verified after each step
-
-If no PRD is provided, ask the user to describe what they want to build. Then generate the full step-by-step plan yourself, following the prompt-writing principles in `references/prompt-writing.md`.
 
 ### Step 2 — Show the Build Map
 
