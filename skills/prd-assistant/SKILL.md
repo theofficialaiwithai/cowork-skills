@@ -11,24 +11,6 @@ Two-phase skill: (1) discovery + PRD creation, (2) interactive step-by-step buil
 
 ## Phase 1: Discovery
 
-### If an Agentic Architecture Brief is provided
-
-If the user pastes or references an **Agentic Architecture Brief** (produced by `vibe-architect-os`), extract the following directly from it — do not ask questions that are already answered:
-
-- App name + one-sentence description → answers Q1
-- User + problem → answers Q2
-- Stack recommendation → answers Q3 and Q8
-
-Then ask **only the remaining unanswered questions** from the list below in a single message. Typically this means asking Q4, Q5, Q6, and Q7. Confirm before writing:
-
-> "Got it — I'll build the PRD for **[App Name]** using the Agentic Architecture Brief as the foundation. Just a few things I still need:"
-
-Then write the PRD. The Agentic Layer section (Section 8b) is required when a Brief is provided — populate it directly from the Brief's Agentic Behaviors and Architecture Map.
-
----
-
-### Standard Discovery (no Brief provided)
-
 **Before writing a single line of the PRD**, ask all of the following questions at once in a clean numbered list. Do not split them across multiple messages. Do not begin writing until you have answers to all of them.
 
 1. **What is the app called, and what does it do?** (A few sentences — the rougher the better. You'll refine it.)

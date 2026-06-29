@@ -20,8 +20,8 @@ Paste this into Replit Agent:
 **What to verify before moving on:**
 - [Specific place in the Replit UI to check and exactly what to look for]
 - [Specific action to take and the expected result]
-- [If there's a preview — what URL to open, what to click, what should appear]
-- [Any console or Shell output to confirm — and what passing output looks like]
+- [If there's a Preview — what to click, what should appear, what should work]
+- [Any console output or error to look for — and what passing looks like]
 
 > 💡 **Tip:** [One specific Replit gotcha for this step. Skip this block entirely if nothing notable.]
 
@@ -33,51 +33,74 @@ Once everything looks good, type **`done`** and I'll give you Step [N+1].
 ## Annotated Example
 
 ```
-## ✅ Step 3 — User Authentication
+## ✅ Step 4 — Add User Login
 
-This step adds login and sign-up so only registered users can access the app. We're doing it now so every page we build from here can check who's logged in.
+This step adds sign-in so each customer has their own account and private data. We're using Clerk, which Agent sets up automatically — no external dashboard needed.
 
 Paste this into Replit Agent:
 
 \```
-Add user authentication to this app using Replit Auth.
+Add user authentication to this app using Clerk Auth.
 
-Set up Replit Auth so that:
-- Any page under /dashboard requires the user to be logged in. If they're not logged in, redirect them to /login.
-- The /login page shows a "Sign in with Replit" button that triggers the Replit Auth flow.
-- After a successful login, the user is redirected to /dashboard.
-- The navbar shows the logged-in user's display name and a "Sign out" button. Clicking Sign out ends the session and redirects to /.
+Set it up so that:
+- The home page (/) is public — anyone can view it without signing in.
+- The /dashboard route is protected. If a user isn't signed in, redirect them to the Clerk sign-in page.
+- After a successful sign-in, redirect the user to /dashboard.
+- The navbar shows the signed-in user's name and a "Sign out" button. Clicking it ends the session and redirects to /.
+- Each user only sees their own data — scope all database queries to the currently signed-in user's ID.
 
-Use the existing Express server in server.js. Store session data in Replit DB (key: `session:[userId]`).
+Agent should provision Clerk automatically. Do not ask me to create a Clerk account or add any keys manually.
 
-Keep all existing routes and UI — only add the auth layer on top.
+Keep the existing homepage layout, color scheme, and all non-auth pages exactly as they are.
 \```
 
 **What to verify before moving on:**
-- Click the Run button (▶) and wait for the preview to load.
-- In the preview, navigate to `/dashboard` in the URL bar. You should be redirected to `/login`.
-- Click "Sign in with Replit." You should be taken through the Replit Auth flow and then land on `/dashboard`.
-- Confirm your display name appears in the navbar, along with a Sign out button.
-- Click Sign out. You should be redirected to the home page and `/dashboard` should redirect you to `/login` again.
+- In Preview, open the app and navigate to `/dashboard` in the URL bar. You should be redirected to the Clerk sign-in page.
+- Sign up with a test email. You should land on `/dashboard` after completing sign-in.
+- Confirm your name appears in the navbar and a Sign out button is visible.
+- Click Sign out. You should be redirected to the homepage. Navigating to `/dashboard` should take you to sign-in again.
+- Open Preview in a private window, create a second test account, and confirm that second account doesn't see the first user's data.
 
-> 💡 **Tip:** Replit Auth only works when the app is running — it won't work in a local preview outside of Replit. If the "Sign in with Replit" button doesn't appear, check the Console tab in the bottom panel for any server errors and paste them into Replit Agent to fix.
+> 💡 **Tip:** Clerk sets up separate Development and Production environments. Sign-in works in Preview using the Development environment. When you publish the app, Agent will automatically wire in the Production Clerk credentials — so sign-in will also work on the public URL without any manual steps.
 
-Once everything looks good, type **`done`** and I'll give you Step 4.
+Once everything looks good, type **`done`** and I'll give you Step 5.
 ```
 
 ---
 
 ## When the Step Has No Visible UI Output
 
-Some steps — config, utility functions, database schema setup, Secrets — produce nothing visible in the preview. When this happens, tell the user explicitly:
+Some steps — database schema setup, adding Secrets, config changes — produce nothing visible in the Preview. When this happens, tell the user explicitly:
 
-> "This step doesn't change anything you'll see in the preview — that's expected. Check [specific location] to confirm it worked."
+> "This step doesn't change anything you'll see in the Preview — that's expected. Check [specific location] to confirm it worked."
 
 Then redirect them to the right verification spot:
-- Database step → check Replit DB in the left sidebar, or open the Shell and query it
-- Secrets step → open the 🔒 Secrets panel and confirm the key appears
-- Package install step → check the Packages tab or look for a green success message in the Replit Agent panel
-- Config file step → open the file in the Files pane and confirm the content
+- **Database step** → ask Agent to show a summary of the tables it created, or ask it to run a quick query to confirm rows exist
+- **Secrets step** → open the 🔒 Secrets panel in the left sidebar and confirm the key name appears
+- **Config step** → open the file in the Files pane and confirm the content looks right
+- **Package install** → check the Console tab in the bottom panel for a successful install message
+
+---
+
+## When a Step Uses Plan Mode
+
+For complex steps — database migrations, auth setup, major refactors — suggest Plan Mode before the user pastes the prompt:
+
+> "This step touches several parts of the app. Before pasting the prompt below, toggle **Plan** on in the Agent chat. That way Agent will show you what it intends to do before making any changes — you can review and approve it first."
+
+Then deliver the prompt normally. The user will see a "task plan is ready for review" banner in Agent. They click **Review now**, read the plan, and approve it before Agent builds.
+
+If something in the plan looks wrong, the user can ask Agent to revise the plan before approving. This is much easier than rolling back after the fact.
+
+---
+
+## When Something Goes Wrong — Suggest a Rollback
+
+If the user reports that Agent broke something or changed more than expected, guide them to roll back:
+
+> "Open the **History** panel in the Project Editor — it's the clock icon in the left sidebar or accessible from the Agent chat. Find the checkpoint just before this step and click **Rollback here**. Agent will confirm what will be restored before applying it. Once you're back to the working version, we'll try the step again with tighter instructions."
+
+Rollbacks are fast and safe — encourage the user to use them rather than trying to manually undo Agent's changes.
 
 ---
 
@@ -85,10 +108,9 @@ Then redirect them to the right verification spot:
 
 Only include the `> 💡 **Tip:**` block if there is a genuine Replit-specific gotcha at this step. Common reasons to include one:
 
-- Replit Auth only works in a running Repl, not a static preview
-- Secrets won't be available until the Repl is restarted after adding them
-- Replit DB is only accessible server-side — client code can't reach it directly
-- The Run button needs to be clicked after Replit Agent finishes making changes
-- A package installed by Replit Agent may need the Repl to restart before it loads
+- Clerk or Neon are provisioned separately for Dev and Production — sign-in or data that works in Preview may need a re-publish before it works on the public URL
+- Secrets aren't available until the next time Agent runs the app — tell the user to send Agent a simple test prompt to restart
+- A database migration requires the Production database to be updated separately from the Dev database
+- A step that appears to do nothing visible in Preview is actually correct (e.g., database seeding)
 
-If there is no notable gotcha, omit the tip block entirely. Don't write tips for their own sake.
+If there is no notable gotcha, omit the tip block entirely.

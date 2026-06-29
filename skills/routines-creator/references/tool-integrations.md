@@ -6,7 +6,7 @@ This file maps available tools and MCPs to the types of tasks they're best suite
 
 ## Communication & Messaging
 
-### Gmail
+### Gmail (`mcp__6fcbc144-ab89-477a-9bd0-444a2c0b7afe`)
 **Best for:** Reading, searching, drafting, and labeling emails.
 
 Routine use cases:
@@ -21,7 +21,7 @@ Key capabilities: `search_threads`, `get_thread`, `create_draft`, `list_labels`,
 
 ---
 
-### Google Calendar
+### Google Calendar (`mcp__8c2a0259-2f84-46d1-a3a9-a3ced41943b8`)
 **Best for:** Reading upcoming events, creating events, checking availability.
 
 Routine use cases:
@@ -34,7 +34,7 @@ Key capabilities: `list_events`, `get_event`, `create_event`, `list_calendars`
 
 ---
 
-### Calendly
+### Calendly (`mcp__bb8315d7-533e-43f6-b4ea-366197a868d1`)
 **Best for:** Checking scheduled meetings, availability, and booking links.
 
 Routine use cases:
@@ -46,7 +46,7 @@ Routine use cases:
 
 ## Productivity & Project Management
 
-### Notion
+### Notion (`mcp__b656d1a9-6e94-40ac-a959-9675bcc010f2`)
 **Best for:** Reading and writing to Notion databases, pages, and docs.
 
 Routine use cases:
@@ -61,7 +61,7 @@ Key capabilities: `notion-search`, `notion-fetch`, `notion-create-pages`, `notio
 
 ## Automation Connectors
 
-### Zapier
+### Zapier (`mcp__0dd8b81b-5832-4881-acde-eaacbe74bf41`)
 **Best for:** Bridging Claude with apps that don't have direct MCPs, and building event-triggered routines.
 
 Routine use cases:
@@ -76,7 +76,7 @@ Key capabilities: `execute_zapier_write_action`, `execute_zapier_read_action`, `
 
 ---
 
-### Make / Integromat
+### Make / Integromat (`mcp__bcbe24ba-6373-425e-aa69-977881bf5872`)
 **Best for:** Complex multi-step automation scenarios with conditional logic.
 
 Routine use cases:
@@ -91,7 +91,7 @@ Use Make when the automation logic is complex enough that Zapier's linear flow i
 
 ## File & Document Tools
 
-### Google Drive
+### Google Drive (`mcp__748511cf-7a92-4007-8ca4-787f8312fdbc`)
 **Best for:** Reading and writing files in Google Drive.
 
 Routine use cases:
@@ -139,7 +139,7 @@ Invoke the `xlsx` skill when the routine's output is a structured table or sprea
 
 ## Design & Visual Tools
 
-### Canva
+### Canva (`mcp__a5d2ba75-2b21-4431-98a8-e52ec0c33f32`)
 **Best for:** Creating or updating design assets automatically.
 
 Routine use cases:
@@ -149,7 +149,7 @@ Routine use cases:
 
 ---
 
-### Figma
+### Figma (`mcp__c74d1290-7f57-41b0-844e-31a0fcd37508`)
 **Best for:** Reading design context or generating design assets.
 
 Routine use cases:
@@ -160,7 +160,7 @@ Routine use cases:
 
 ## Development & Infrastructure
 
-### Supabase
+### Supabase (`mcp__6a3a870e-14a3-4b81-9e9f-520f9d9a4ed2`)
 **Best for:** Running SQL queries, reading/writing database records.
 
 Routine use cases:
@@ -170,7 +170,7 @@ Routine use cases:
 
 ---
 
-### Vercel
+### Vercel (`mcp__33ac342b-cce0-415f-9220-a82b5e7751d4`)
 **Best for:** Monitoring deployments and project status.
 
 Routine use cases:
@@ -192,7 +192,7 @@ Routine use cases:
 
 ---
 
-### Apify
+### Apify (`mcp__Apify`)
 **Best for:** Web scraping and structured data extraction at scale.
 
 Routine use cases:

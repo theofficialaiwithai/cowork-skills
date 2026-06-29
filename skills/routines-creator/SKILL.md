@@ -1,20 +1,38 @@
 ---
 name: routines-creator
-description: "Designs and builds Routines for Claude Code — automated, repeatable workflows that run on a schedule, on a trigger, or on demand. Use this skill whenever the user says 'create a routine', 'build a routine', 'I want to automate this', 'help me set up a recurring workflow', 'I do this every week/day and want Claude to handle it', 'set up a scheduled task', 'automate my morning/weekly/monthly process', or describes any task they want to happen automatically or consistently. Also trigger when the user says 'I keep doing X manually' or 'can Claude do Y for me automatically' or 'recommend me a routine' or 'what routine should I build' or 'help me figure out what to automate'. This skill covers the full lifecycle: recommending routines via questionnaire, interviewing the user, designing the routine architecture, identifying the right tools and integrations, and building the routine one step at a time."
+description: "Designs and builds Routines for Claude Code or Cowork — automated, repeatable workflows that run on a schedule, on a trigger, or on demand. Use this skill whenever the user says 'create a routine', 'build a routine', 'I want to automate this', 'help me set up a recurring workflow', 'I do this every week/day and want Claude to handle it', 'set up a scheduled task', 'automate my morning/weekly/monthly process', or describes any task they want to happen automatically or consistently. Also trigger when the user says 'I keep doing X manually' or 'can Claude do Y for me automatically' or 'recommend me a routine' or 'what routine should I build' or 'help me figure out what to automate'. This skill covers the full lifecycle: recommending routines via questionnaire, interviewing the user, designing the routine architecture, identifying the right tools and integrations, and building the routine one step at a time — for both Claude Code and Cowork."
 ---
 
 # Routines Creator
 
-A Routine is a named, repeatable workflow that Claude executes automatically or on demand. This skill helps the user go from "I want to automate X" — or even just "I don't know what to automate" — all the way to a working routine.
+A Routine is a named, repeatable workflow that Claude executes automatically or on demand. This skill helps the user go from "I want to automate X" — or even just "I don't know what to automate" — all the way to a working routine, on whichever platform they're using.
 
 **Two ways to start:**
 
-- **"I know what I want to build"** → Go straight to Phase 1: Discover
-- **"I'm not sure what to build"** → Start with Recommend Mode
+- **"I know what I want to build"** → Platform Selection, then Phase 1: Discover
+- **"I'm not sure what to build"** → Recommend Mode first, then Platform Selection
 
 Everything in this skill happens **one step at a time**. Claude asks one question, waits for the answer, then moves forward. Claude never presents a wall of information — only what the user needs right now. When building, each action gets its own step. The user says **"done"** (or "next" or "ready") to advance.
 
 This approach exists because building routines involves a lot of decisions and actions — presenting them all at once creates overwhelm and makes it easy to miss things. One step at a time keeps things clear and manageable.
+
+---
+
+## Platform Selection
+
+Ask this before anything else — before Phase 1, and before Recommend Mode if the user already knows what they want to build. If Recommend Mode comes first, ask this immediately after the user picks a routine to build.
+
+Ask exactly this (keep it short and clear):
+
+> "Quick question before we dive in — are you building this for **Claude Code** (the terminal/CLI tool) or **Cowork** (the desktop app)? The setup steps are different depending on which one."
+
+Wait for the answer. Then carry the platform choice through every remaining phase — it affects Phase 2 (design notes and constraints) and Phase 3 (how the routine is actually built).
+
+**If they say Claude Code:** Read `references/claude-code-implementation.md` before Phase 2. The build steps in Phase 3 will follow the Claude Code path.
+
+**If they say Cowork:** Proceed with the existing Cowork build paths in Phase 3 (scheduled tasks MCP, skill files, Zapier/Make connectors).
+
+**If they're unsure:** Briefly explain in one sentence: "Claude Code is the terminal app you install and run from your command line. Cowork is the desktop app you're using right now." Then ask again.
 
 ---
 
@@ -111,25 +129,81 @@ Wait. Do not advance until the user says done (or "next", "ready", "continue", "
 
 Keep each step to 3–5 lines max. If a step involves multiple sub-actions, break it into separate steps rather than combining them.
 
-### Build paths by routine type
+---
 
-**Scheduled routines:**
-- Step 1: Confirm the cron schedule and show it in plain language ("every Monday at 8am = `0 8 * * 1`")
+### Build Path A: Cowork
+
+Use this when the user chose Cowork during Platform Selection.
+
+**Scheduled routines (Cowork):**
+- Step 1: Confirm the cron schedule — show it in both plain language and cron format ("every Monday at 8am = `0 8 * * 1`")
 - Step 2: Write the self-contained task prompt
-- Step 3: Register the scheduled task via `mcp__scheduled-tasks__create_scheduled_task`
-- Step 4: Confirm it's registered and show the task ID
+- Step 3: Register via `mcp__scheduled-tasks__create_scheduled_task` — confirm the task ID and next run time
+- Step 4: Offer to run it once immediately as a test
 
-**On-demand routines:**
-- Step 1: Confirm the skill name and where it will live
+**On-demand routines (Cowork):**
+- Step 1: Confirm the skill name and that the Skills Creator workspace is where it should live
 - Step 2: Write the SKILL.md content
-- Step 3: Save the file to the Skills Creator workspace
-- Step 4: Confirm how to invoke it
+- Step 3: Save to the Skills Creator workspace folder
+- Step 4: Confirm how to invoke it (by saying its name or typing `/skill-name`)
 
-**Event-triggered routines:**
-- Step 1: Confirm the trigger event and source app
-- Step 2: Set up the connector (Zapier, Make, or direct MCP)
+**Event-triggered routines (Cowork):**
+- Step 1: Confirm the trigger event and which app fires it
+- Step 2: Set up the connector (Zapier MCP, Make MCP, or direct app MCP)
 - Step 3: Write the Claude prompt that runs when triggered
-- Step 4: Test the trigger with a sample event
+- Step 4: Test with a sample event
+
+---
+
+### Build Path B: Claude Code
+
+Use this when the user chose Claude Code during Platform Selection. Read `references/claude-code-implementation.md` for the full technical details of each mechanism.
+
+Claude Code has four ways to implement a routine — the right one depends on the routine type:
+
+| Routine type | Claude Code mechanism |
+|---|---|
+| On-demand (call it yourself) | Skill file in `.claude/skills/` |
+| Simple one-liner prompt | Slash command in `.claude/commands/` |
+| Scheduled (runs automatically) | `claude trigger create` |
+| Event-triggered (fires on a tool or lifecycle event) | Hook in `.claude/settings.json` |
+
+**On-demand routines (Claude Code — Skill file):**
+- Step 1: Confirm the skill name and scope — user-level (`~/.claude/skills/`) so it works everywhere, or project-level (`.claude/skills/`) for a specific project. Ask which they prefer.
+- Step 2: Write the SKILL.md content — include the YAML frontmatter (`name`, `description`) and the full step-by-step workflow
+- Step 3: Create the skill directory and save the file. If file access is available, write it directly. If not, show the user the exact file path and content to create.
+- Step 4: Confirm invocation — user can type `/skill-name` in Claude Code or just describe what they want (Claude auto-invokes based on the description)
+
+**Scheduled routines (Claude Code — `claude trigger create`):**
+- Step 1: Confirm the schedule in cron format and show the plain-language equivalent
+- Step 2: Write the self-contained prompt Claude will run at each trigger
+- Step 3: Provide the exact `claude trigger create` command to run in the terminal. If possible, run it directly. If not, show the command clearly formatted in a code block with an explanation of each flag.
+- Step 4: Confirm it's registered — show what to expect and how to verify it's running
+
+**Event-triggered routines (Claude Code — Hooks):**
+- Step 1: Confirm the hook event type (PreToolUse, PostToolUse, SessionStart, SessionEnd, UserPromptSubmit, Stop) and what triggers it
+- Step 2: Write the shell script or HTTP handler that will run
+- Step 3: Show the exact JSON snippet to add to `.claude/settings.json`. If file access is available, write it directly. If not, show the full config snippet to paste.
+- Step 4: Explain how to test it — what action will fire the hook for the first time
+
+**Simple prompt shortcuts (Claude Code — Slash command):**
+Use this only for very simple, one-shot prompts that don't need a full skill structure.
+- Step 1: Confirm the command name
+- Step 2: Write the markdown file content (just the prompt)
+- Step 3: Save to `~/.claude/commands/<name>.md` (user-level) or `.claude/commands/<name>.md` (project-level)
+- Step 4: Confirm — user invokes with `/<name>` in Claude Code
+
+---
+
+### When Claude Code can't deploy directly
+
+If this skill is running in Cowork (not Claude Code) and the user wants to build for Claude Code, Claude can still write the files to the filesystem — just ask for the path to their Claude Code project first:
+
+> "What's the path to your Claude Code project folder? For example: `/Users/yourname/my-project` — I'll save the files in the right place inside it."
+
+If the user doesn't have a project yet or prefers to do it manually, present each file's content in a clearly labeled code block with the exact destination path above it, so they can copy-paste it themselves.
+
+---
 
 ### After the last step
 
@@ -169,3 +243,4 @@ The user may be working through a lot of decisions and actions. These guidelines
 - `references/routine-types.md` — Scheduled, triggered, and on-demand routine types with trigger mechanics and implementation guidance. Read during Phase 2.
 - `references/tool-integrations.md` — Available MCPs and tools, what they do, and when to use each. Read during Phase 2 when mapping steps to tools.
 - `references/routine-recommender.md` — Questionnaire questions and recommendation logic for Recommend Mode. Read at the start of Recommend Mode.
+- `references/claude-code-implementation.md` — Technical details for building routines in Claude Code: Skills, Slash Commands, Hooks, and Scheduled Tasks. Read when the user selects Claude Code during Platform Selection.

@@ -114,36 +114,6 @@ Include a note if a static JSON file is better than a live API for MVP (e.g., "U
 
 ---
 
-## Section 8b: Agentic Layer *(required when an Agentic Architecture Brief was provided; include when any agentic behavior exists)*
-
-This section documents the automated behaviors baked into the product — the things the app does on its own, without the user triggering them. It bridges the tech stack and the data schema, since agentic behaviors often require additional database tables, API routes, and environment variables.
-
-**Sub-sections:**
-
-**Agentic Behaviors**
-List each behavior from the Brief (or identified during discovery) in this format:
-- **[Behavior name]** — Pattern: `[webhook / cron / mcp / automation / claude-api]` — Implementation: [specific tools and how they connect]
-
-**Architecture Map**
-Reproduce the TRIGGER → HANDLER → ACTION → OUTPUT map for each behavior. This becomes the blueprint for the build steps.
-
-```
-[Trigger] → [Handler] → [Action] → [Output]
-```
-
-**Agentic Infrastructure**
-List what needs to be added to support the agentic layer:
-- New database tables (e.g. `job_queue`, `notification_log`, `conversation_sessions`)
-- New API routes (e.g. `/api/webhooks/stripe`, `/api/cron/digest`)
-- Cron job definitions (include cron syntax)
-- Environment variables (e.g. `ANTHROPIC_API_KEY`, `RESEND_API_KEY`, `SLACK_WEBHOOK_URL`)
-- External service setup required (e.g. "Register Stripe webhook in dashboard", "Enable Supabase real-time on `payments` table")
-
-**Build Order Note**
-Flag which MVP build steps are affected by the agentic layer and must be completed before the agentic features can be added. This ensures `code-build-copilot` sequences the agentic steps correctly.
-
----
-
 ## Section 9: Data Schema
 
 Write complete SQL for all tables if using a relational database (Supabase/Postgres). Requirements:
